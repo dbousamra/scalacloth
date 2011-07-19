@@ -8,7 +8,7 @@ class Particle(
     ) {
 
   val forces = 0.0f
-  val stuck = false
+  var stuck = false
   var neighbors = new Array[Coordinate](4)
     
   def getCurrentPos(): Position = {
@@ -17,6 +17,10 @@ class Particle(
   
   def setCurrentPos(p: Position) = {
     currentPosition = p
+  }
+  
+  def setStuck() = {
+    stuck = true
   }
    
   def setPreviousPos(p: Position) = {

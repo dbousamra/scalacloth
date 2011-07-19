@@ -25,21 +25,31 @@ class Screen extends PApplet {
   
   override def setup() = {
     cloth.createGrid()
-    size(640, 360)
-    background(102)
+    cloth.grid(0)(0).setStuck()
+    cloth.grid(9)(0).setStuck()
+    size(640, 720)
+    background(255)
     smooth()
     noStroke()
     fill(0, 102)
   }
  
   override def draw() = {
+    background(255)
     fill(255);
+    stroke(0)
     for (x <- 0.until(cloth.getRows)) {
       for (y <- 0.until(cloth.getColumns)) {
-        stroke(255)
-        point(cloth.grid(x)(y).getCurrentPos.getX * 20 + 20, cloth.grid(x)(y).getCurrentPos.getY * 20 + 20)
+        var neighbors = cloth.grid(x)(y).getNeighbors
+        for (n <- neighbors) {
+          line(cloth.grid(x)(y).getCurrentPos.getX * 40 + 40, cloth.grid(x)(y).getCurrentPos.getY * 40 + 40,
+              cloth.grid(n.getX)(n.getY).getCurrentPos.getX * 40 + 40, cloth.grid(n.getX)(n.getY).getCurrentPos.getY* 40 + 40);
+        }
 	  }
     }
+    
+    
     cloth.verletIntegration
+    cloth.satisfyConstraints
   }
 }
