@@ -1,71 +1,10 @@
 import scala.collection
 
-class Position(var X: Float, var Y: Float) {
-
-  def getX(): Float = {
-    return X
-  }
-
-  def getY(): Float = {
-    return Y
-  }
-
-  def setX(newCoordinate: Int) = {
-    X = newCoordinate
-  }
-
-  def setY(newCoordinate: Int) = {
-    Y = newCoordinate
-  }
-}
-
-class Coordinate(var X: Int, var Y: Int) {
-
-  def getX(): Int = {
-    return X
-  }
-
-  def getY(): Int = {
-    return Y
-  }
-
-}
-
-class Particle(
-    var currentPosition: Position, 
-    var previousPosition: Position, 
-    val gridIndex: Coordinate, 
-    val restLength: Float
-    ) {
-
-  val forces = 0
-  val stuck = false
-  var neighbors = new Array[Coordinate](4)
-    
-  def getCurrentPos(): Position = {
-    return currentPosition
-  }
-
-  def getPreviousPosition(): Position = {
-    return previousPosition
-  }
-  
-  def getGridIndex(): Coordinate = {
-    return gridIndex
-  }
-
-  def getNeighbors(): Array[Coordinate] = {
-    return neighbors
-  }
-  
-  def setNeighbors(neigh: Array[Coordinate]) = {
-    neighbors = neigh
-  }
-}
 
 class Cloth(val rows: Int, val columns: Int, var gravity: Float) {
 
   var grid = new Array[Array[Particle]](rows, columns)
+  val timestep = 0.5f
 
   def createGrid() = {
     for (x <- 0.until(rows)) {
@@ -95,6 +34,22 @@ class Cloth(val rows: Int, val columns: Int, var gravity: Float) {
       case _ if coord.getY < 0.0 => false
       case _ if coord.getY > columns - 1 => false
       case _ => true
+    }
+  }
+  
+  def verletIntegration() = {	
+    
+    for (row <- grid) {
+      for (p <- row) {
+        if (p.stuck) p.setCurrentPos(p.getPreviousPos)
+        
+        var multiplyByTime = Tuple2(p.getForces * timestep * timestep, gravity * timestep * timestep)
+        var minusPrevPos = Tuple2(p.getCurrentPos.getX - p.getPreviousPos.getX, p.getCurrentPos.getY + p.getPreviousPos.getY)
+        var together = Tuple2(multiplyByTime._1 + minusPrevPos._1 , multiplyByTime._2  + minusPrevPos._2)  
+        
+        println(together)
+      }
+      
     }
   }
 
