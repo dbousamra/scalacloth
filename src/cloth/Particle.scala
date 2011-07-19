@@ -1,3 +1,5 @@
+package cloth
+
 class Particle(
     var currentPosition: Position, 
     var previousPosition: Position, 

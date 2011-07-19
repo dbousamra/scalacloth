@@ -1,5 +1,6 @@
-import scala.collection
+package cloth
 
+import scala.collection
 
 class Cloth(val rows: Int, val columns: Int, var gravity: Float) {
 

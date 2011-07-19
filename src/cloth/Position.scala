@@ -1,3 +1,5 @@
+package cloth
+
 class Position(var X: Float, var Y: Float) {
 
   def getX(): Float = {
