@@ -20,13 +20,13 @@ object Run {
  
 class Screen extends PApplet {
  
-  var cloth = new Cloth(10, 10, 0.005f)
+  var cloth = new Cloth(20, 20, 0.005f)
   var angle:Int = 0;
   
   override def setup() = {
     cloth.createGrid()
     cloth.grid(0)(0).setStuck()
-    cloth.grid(9)(0).setStuck()
+    cloth.grid(19)(0).setStuck()
     size(640, 720)
     background(255)
     smooth()
@@ -42,8 +42,8 @@ class Screen extends PApplet {
       for (y <- 0.until(cloth.getColumns)) {
         var neighbors = cloth.grid(x)(y).getNeighbors
         for (n <- neighbors) {
-          line(cloth.grid(x)(y).getCurrentPos.getX * 40 + 40, cloth.grid(x)(y).getCurrentPos.getY * 40 + 40,
-              cloth.grid(n.getX)(n.getY).getCurrentPos.getX * 40 + 40, cloth.grid(n.getX)(n.getY).getCurrentPos.getY* 40 + 40);
+          line(cloth.grid(x)(y).getCurrentPos.getX * 20 + 20, cloth.grid(x)(y).getCurrentPos.getY * 20 + 20,
+              cloth.grid(n.getX)(n.getY).getCurrentPos.getX * 20 + 20, cloth.grid(n.getX)(n.getY).getCurrentPos.getY* 20 + 20);
         }
 	  }
     }
