@@ -8,5 +8,8 @@ object Main {
 //  x.grid(1)(1).getNeighbors.foreach {
 //    arg => println(arg)
 //  }
-  x.verletIntegration
+  for (i <- 0 until 100){
+     x.verletIntegration
+     println(x.grid(2)(4).getCurrentPos.getX, x.grid(2)(4).getCurrentPos.getY)
+  }
 }

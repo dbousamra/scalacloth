@@ -41,15 +41,14 @@ class Cloth(val rows: Int, val columns: Int, var gravity: Float) {
     
     for (row <- grid) {
       for (p <- row) {
-        if (p.stuck) p.setCurrentPos(p.getPreviousPos)
+        //if (p.stuck) p.setCurrentPos(p.getPreviousPos)
         
         var multiplyByTime = Tuple2(p.getForces * timestep * timestep, gravity * timestep * timestep)
-        var minusPrevPos = Tuple2(p.getCurrentPos.getX - p.getPreviousPos.getX, p.getCurrentPos.getY + p.getPreviousPos.getY)
-        var together = Tuple2(multiplyByTime._1 + minusPrevPos._1 , multiplyByTime._2  + minusPrevPos._2)  
-        
-        println(together)
+        var minusPrevPos = Tuple2(p.getCurrentPos.getX - p.getPreviousPos.getX, p.getCurrentPos.getY - p.getPreviousPos.getY)
+        var together = Tuple2(multiplyByTime._1 + minusPrevPos._1 , multiplyByTime._2  + minusPrevPos._2)
+        p.setPreviousPos(p.getCurrentPos)
+        p.setCurrentPos(new Position(p.getCurrentPos.getX + together._1, p.getCurrentPos.getY + together._2))
       }
-      
     }
   }
 
