@@ -1,28 +1,12 @@
 package cloth
 
-class Position(var X: Float, var Y: Float) {
-
-  def getX(): Float = {
-    return X
-  }
-
-  def getY(): Float = {
-    return Y
-  }
-
-  def setX(newCoordinate: Int) = {
-    X = newCoordinate
-  }
-
-  def setY(newCoordinate: Int) = {
-    Y = newCoordinate
-  }
+class Position(var x: Float, var y: Float) {
   
   def subtractPosition(position: Position): Position = {
-    return new Position(X - position.getX, Y - position.getY)
+    return new Position(x - position.x, y - position.y)
   }
   
   def addPosition(position: Position): Position = {
-    return new Position(X + position.getX, Y + position.getY)
+    return new Position(x + position.x, y + position.y)
   }
 }

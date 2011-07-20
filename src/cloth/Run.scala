@@ -1,6 +1,7 @@
 package cloth
 
 import processing.core._
+import java.awt.Dimension
 
 object Run {
  
@@ -9,7 +10,9 @@ object Run {
    def main(args: Array[String]): Unit = {
     test = new Screen
     val frame = new javax.swing.JFrame("Test")
+    frame.setPreferredSize(new Dimension(640, 720))
     frame.getContentPane().add(test)
+    
     test.init
  
     frame.pack
@@ -20,13 +23,20 @@ object Run {
  
 class Screen extends PApplet {
  
-  var cloth = new Cloth(20, 20, 0.005f)
-  var angle:Int = 0;
+  var cloth = new Cloth(
+      rows = 20, 
+      columns = 20, 
+      gravity = 0.005f,
+      timestep = 0.5f,
+      fixedParticles = List(
+          new Coordinate(x = 0, y = 0),
+          new Coordinate(x = 20 - 1, y=0),
+          new Coordinate(x = 30 - 1, y=0)
+          )
+      )
   
   override def setup() = {
     cloth.createGrid()
-    cloth.grid(0)(0).setStuck()
-    cloth.grid(19)(0).setStuck()
     size(640, 720)
     background(255)
     smooth()
@@ -38,17 +48,16 @@ class Screen extends PApplet {
     background(255)
     fill(255);
     stroke(0)
-    for (x <- 0.until(cloth.getRows)) {
-      for (y <- 0.until(cloth.getColumns)) {
-        var neighbors = cloth.grid(x)(y).getNeighbors
-        for (n <- neighbors) {
-          line(cloth.grid(x)(y).getCurrentPos.getX * 20 + 20, cloth.grid(x)(y).getCurrentPos.getY * 20 + 20,
-              cloth.grid(n.getX)(n.getY).getCurrentPos.getX * 20 + 20, cloth.grid(n.getX)(n.getY).getCurrentPos.getY* 20 + 20);
+    
+    def drawLines(particle: Particle) = {
+      particle.neighbors.foreach {
+        n =>
+          line(particle.currentPos.x * 20 + 20, particle.currentPos.y * 20 + 20,
+          cloth.grid(n.x)(n.y).currentPos.x * 20 + 20, cloth.grid(n.x)(n.y).currentPos.y* 20 + 20);
         }
-	  }
     }
     
-    
+    cloth.grid.map(x => x.foreach(y => drawLines(y))) 
     cloth.verletIntegration
     cloth.satisfyConstraints
   }
