@@ -9,12 +9,10 @@ object Run {
   
    def main(args: Array[String]): Unit = {
     test = new Screen
-    val frame = new javax.swing.JFrame("Test")
+    val frame = new javax.swing.JFrame("scalacloth")
     frame.setPreferredSize(new Dimension(640, 720))
     frame.getContentPane().add(test)
-    
     test.init
- 
     frame.pack
     frame.setVisible(true)
   }
@@ -26,12 +24,10 @@ class Screen extends PApplet {
   var cloth = new Cloth(
       rows = 20, 
       columns = 20, 
-      gravity = 0.005f,
-      timestep = 0.5f,
+      gravity = 0.001f,
+      timestep = 0.8f,
       fixedParticles = List(
-          new Coordinate(x = 0, y = 0),
-          new Coordinate(x = 20 - 1, y=0),
-          new Coordinate(x = 30 - 1, y=0)
+          new Coordinate(x = 19, y = 0)
           )
       )
   

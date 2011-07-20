@@ -52,49 +52,34 @@ class Cloth(
     for (row <- grid;p <- row) {
         if (p.stuck) p.currentPos = p.previousPos
         
-        var multiplyByTime = (p.forces * timestep * timestep, gravity * timestep * timestep)
-        var minusPrevPos = (p.currentPos.x - p.previousPos.x, p.currentPos.y - p.previousPos.y)
-        var together = (multiplyByTime._1 + minusPrevPos._1 , multiplyByTime._2  + minusPrevPos._2)
+        val multiplyByTime = (p.forces * timestep * timestep, gravity * timestep * timestep)
+        val minusPrevPos = (p.currentPos.x - p.previousPos.x, p.currentPos.y - p.previousPos.y)
+        val together = (multiplyByTime._1 + minusPrevPos._1 , multiplyByTime._2  + minusPrevPos._2)
         p.previousPos = p.currentPos
         p.currentPos = new Position(p.currentPos.x + together._1, p.currentPos.y + together._2)
       
     }
   }
-
-  def satisfyConstraints() = {
-    for (row <- grid) {
-      for (p <- row) {
-        if (p.stuck) p.currentPos = p.previousPos
-        else {
-          var neighbors = p.neighbors
-          for (constraint <- neighbors) {
-            val c2 = grid(constraint.x)(constraint.y).currentPos
-            val c1 = p.currentPos
-            val delta = (c2.x - c1.x, c2.y - c1.y)
-            val deltaLength = math.sqrt(math.pow((c2.x - c1.x), 2) + math.pow((c2.y - c1.y),2))
-            val difference = (deltaLength - 1.0f) / deltaLength
-            val dtemp = (delta._1 * 0.5f * difference, delta._2 * 0.5f * difference)
-            p.currentPos = new Position(c1.x + dtemp._1.floatValue, c1.y + dtemp._2.floatValue)
-            
-            grid(constraint.x)(constraint.y).currentPos = (new Position(c2.x - dtemp._1.floatValue, c2.y - dtemp._2.floatValue))
-//          }
-          
-          }
-        }
+  
+  def satisfyConstraints() {
+    
+    def calculateConstraint(constraint: Coordinate, p: Particle) {
+      val c2 = grid(constraint.x)(constraint.y).currentPos
+	  val c1 = p.currentPos
+	  val delta = ((c2-c1).x, (c2-c1).y)
+	  val deltaLength = math.sqrt(math.pow(((c2-c1).x), 2) + math.pow(((c2-c1).y),2))
+	  val difference = (deltaLength - 1.0f) / deltaLength
+	  val dtemp = (delta._1 * 0.5f * difference, delta._2 * 0.5f * difference)
+	  p.currentPos = new Position(c1.x + dtemp._1.floatValue, c1.y + dtemp._2.floatValue)
+      grid(constraint.x)(constraint.y).currentPos = (new Position(c2.x - dtemp._1.floatValue, c2.y - dtemp._2.floatValue))
+    }
+    
+    for(row <- grid; p <- row) {
+      if (p.stuck) p.currentPos = 	p.previousPos
+      else {
+        p.neighbors.map(n => calculateConstraint(n, p))
       }
     }
   }
-
-  def getRows(): Int = {
-    return rows
-  }
-
-  def getColumns(): Int = {
-    return columns
-  }
-
-  def getParticle(coord: Coordinate): Particle = {
-    return grid(coord.x)(coord.y)
-  }
-
+  
 }
